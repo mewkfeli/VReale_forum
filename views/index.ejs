@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="/css/main.css">
+
+<body>
+    <header>
+        <div class="logo"><a href="/">VReale</a></div>
+        <nav>
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="#">Доски</a></li>
+                <li><a href="#">Поиск</a></li>
+                <li><a href="#">FAQ</a></li>
+                <a class="page-mode" href="../pages/dark_index.html"><img src="resources/icon-dark-mode.png"
+                        alt="Тёмная тема"></a>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="board-category">
+                <h3>Доски</h3>
+                <ul>
+                    <li><a href="../pages/au.html">Автомобили и транспорт</a></li>
+                    <li><a href="">Аниме</a></li>
+                    <li><a href="">Видеоигры</a></li>
+                    <li><a href="">Музыка</a></li>
+                    <li><a href="">Настольные игры</a></li>
+                    <li><a href="">Программирование</a></li>
+                    <li><a href="">Спорт</a></li>
+                    <li><a href="">Фильмы</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="section-header">
+                <h2>/<%= boardShortName %>/ - <%= boardName %>
+                </h2>
+            </div>
+
+            <div class="thread-list">
+                <% threads.forEach(thread=> { %>
+                    <div class="thread">
+                        <div class="thread-header">
+                            <span class="thread-id">#<%= thread.id %></span>
+                            <span class="thread-date">
+                                <%= new Date(thread.post_created_at).toLocaleString('ru-RU') %>
+                            </span>
+                        </div>
+                        <div class="thread-content">
+                            <% if (thread.subject) { %>
+                                <h3>
+                                    <%= thread.subject %>
+                                </h3>
+                                <% } %>
+                                    <p>
+                                        <%= thread.message %>
+                                    </p>
+                        </div>
+
+                        <% if (thread.comments && thread.comments.length> 0) { %>
+                            <!-- Комментарии к треду -->
+                            <div class="thread-comments">
+                                <% thread.comments.forEach(comment=> { %>
+                                    <div class="comment">
+                                        <div class="comment-header">
+                                            <span class="comment-id">>>#<%= comment.id %></span>
+                                            <span class="comment-date">
+                                                <%= new Date(comment.created_at).toLocaleString('ru-RU') %>
+                                            </span>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p>
+                                                <%= comment.message %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+
+                                        <% if (thread.replyCount> 3) { %>
+                                            <!-- Кнопка перехода если комментариев > 3 -->
+                                            <div class="view-thread">
+                                                <a href="/b/<%= thread.id %>" class="view-thread-button">Перейти в тред
+                                                    (<%= thread.replyCount %> ответов)</a>
+                                            </div>
+                                            <% } %>
+                            </div>
+                            <% } %>
+
+                                <div class="thread-footer">
+                                    <span class="thread-replies">Ответов: <%= thread.replyCount %></span>
+                                    <a href="/b/<%= thread.id %>" class="thread-reply">Ответить</a>
+                                </div>
+                    </div>
+                    <% }); %>
+            </div>
+            <div class="load-more">
+                <button class="more-button">Ещё</button>
+            </div>
+
+            <div class="thread-form">
+                <h3>Создать новый тред</h3>
+                <form action="/b/new" method="POST">
+                    <textarea name="message" placeholder="Текст сообщения..." rows="4" required></textarea>
+                    <div class="form-footer">
+                        <input type="text" name="subject" placeholder="Тема (необязательно)">
+                        <button type="submit">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>Командный проект VReale © 2025 | Все права не защищены</p>
+    </footer>
+</body>
+
+</html>
