@@ -1,43 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loadMoreBtn = document.querySelector('.more-button');
-    let currentPage = 1;
-    const boardShortName = '<%= boardShortName %>';
-
+    
     if (loadMoreBtn) {
+        const boardShortName = loadMoreBtn.dataset.board || 'b';
+        let currentPage = 1;
+
         loadMoreBtn.addEventListener('click', async () => {
             currentPage++;
             loadMoreBtn.disabled = true;
-            loadMoreBtn.innerHTML = '<span class="spinner"></span> Загрузка...';
+            loadMoreBtn.textContent = 'Загрузка...';
 
             try {
-                const response = await fetch(`/api/threads?page=${currentPage}`);
-                
-                // Проверка статуса ответа
+                const response = await fetch(`/api/boards/${boardShortName}/threads?page=${currentPage}`);
                 if (!response.ok) {
-                    throw new Error('Сетевая ошибка: ' + response.status);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
-                const threads = await response.json();
-
-                if (!Array.isArray(threads) || threads.length === 0) {
+                
+                const data = await response.json();
+                
+                if (data.threads.length === 0) {
                     loadMoreBtn.textContent = 'Треды закончились';
                     loadMoreBtn.disabled = true;
                     return;
                 }
 
                 const threadList = document.querySelector('.thread-list');
-
-                threads.forEach(thread => {
+                
+                data.threads.forEach(thread => {
                     const threadElement = createThreadElement(thread);
                     threadList.appendChild(threadElement);
                 });
 
                 loadMoreBtn.disabled = false;
                 loadMoreBtn.textContent = 'Ещё';
+                
+                // Обновляем заголовок, если он изменился
+                const header = document.querySelector('.section-header h2');
+                if (header) {
+                    header.textContent = `/${data.boardShortName}/ - ${data.boardName}`;
+                }
             } catch (error) {
                 console.error('Ошибка при загрузке тредов:', error);
                 loadMoreBtn.textContent = 'Ошибка загрузки';
-                loadMoreBtn.disabled = false; // Разблокируем кнопку в случае ошибки
+                setTimeout(() => {
+                    loadMoreBtn.textContent = 'Ещё';
+                    loadMoreBtn.disabled = false;
+                }, 2000);
             }
         });
     }

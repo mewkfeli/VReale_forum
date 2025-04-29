@@ -29,14 +29,11 @@
             <div class="board-category">
                 <h3>Доски</h3>
                 <ul>
-                    <li><a href="/pages/au.html">Автомобили и транспорт</a></li>
-                    <li><a href="">Аниме</a></li>
-                    <li><a href="">Видеоигры</a></li>
-                    <li><a href="">Музыка</a></li>
-                    <li><a href="">Настольные игры</a></li>
-                    <li><a href="">Программирование</a></li>
-                    <li><a href="">Спорт</a></li>
-                    <li><a href="">Фильмы</a></li>
+                    <li><a href="/b">Бред</a></li>
+                    <li><a href="/a">Аниме</a></li>
+                    <li><a href="/vg">Видеоигры</a></li>
+                    <li><a href="/mu">Музыка</a></li>
+                    <li><a href="/news">Новости</a></li>
                 </ul>
             </div>
         </aside>
@@ -86,10 +83,9 @@
                     <% }); %>
             </div>
 
-            <!-- Форма добавления комментария -->
             <div class="reply-form">
                 <h3>Добавить комментарий</h3>
-                <form action="/b/<%= thread.id %>/reply" method="POST">
+                <form action="/<%= boardShortName %>/<%= thread.id %>/reply" method="POST">
                     <textarea name="message" placeholder="Текст сообщения..." rows="4" required></textarea>
                     <div class="form-footer">
                         <input type="text" name="name" placeholder="Имя (необязательно)" maxlength="50">
@@ -104,6 +100,8 @@
         <p>Командный проект VReale © 2025 | Все права не защищены</p>
     </footer>
     <script src="/js/theme.js"></script>
+    <script src="/js/load_threads.js"></script>
+
 </body>
 
 </html>
