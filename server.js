@@ -7,6 +7,10 @@ const morgan = require('morgan');
 const app = express();
 const port = 3000;
 
+app.use(express.urlencoded({ extended: true })); // Для обработки данных форм
+app.use(express.json()); // Для обработки JSON данных
+app.use(morgan('dev')); // Логирование запросов
+
 // Проверка существования необходимых шаблонов
 const requiredTemplates = ['404.ejs', '500.ejs', 'thread.ejs', 'index.ejs'];
 requiredTemplates.forEach(template => {
@@ -38,18 +42,22 @@ db.connect(err => {
 });
 
 // Middleware для статических файлов
-app.use(express.static(path.join(__dirname, 'vreale_website'))); // Основная папка
-app.use('/css', express.static(path.join(__dirname, 'vreale_website', 'css'))); // Явно для CSS
-app.use('/js', express.static(path.join(__dirname, 'vreale_website', 'js'))); // Явно для JS
-app.use('/resources', express.static(path.join(__dirname, 'vreale_website', 'resources'))); // Явно для ресурсов
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/css', express.static(path.join(__dirname, 'css'))); // Явно для CSS
+app.use('/js', express.static(path.join(__dirname, 'js'))); // Явно для JS
+app.use('/resources', express.static(path.join(__dirname,'resources'))); // Явно для ресурсов
 
 // Установка EJS как шаблонизатора
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Главная страница (доска /b)
+// Главная страница
 app.get('/', async (req, res, next) => {
     try {
+        // Первоначально загружаем только 3 треда
+        const limit = 3;
+        
         const [boardResults] = await db.promise().query(
             'SELECT id FROM boards WHERE short_name = "b" LIMIT 1'
         );
@@ -65,8 +73,8 @@ app.get('/', async (req, res, next) => {
             JOIN posts p ON t.id = p.thread_id AND p.is_op = TRUE
             WHERE t.board_id = ?
             ORDER BY t.is_pinned DESC, t.updated_at DESC
-            LIMIT 10
-        `, [boardId]);
+            LIMIT ?
+        `, [boardId, limit]);
 
         const threadsWithComments = await Promise.all(
             threads.map(async thread => {
@@ -95,7 +103,8 @@ app.get('/', async (req, res, next) => {
         res.render('index', {
             threads: threadsWithComments,
             boardName: 'Бред',
-            boardShortName: 'b'
+            boardShortName: 'b',
+            currentPage: 1 // Добавляем текущую страницу
         });
     } catch (err) {
         next(err);
@@ -203,6 +212,65 @@ app.post('/b/:threadId/reply', async (req, res, next) => {
         res.redirect(`/b/${threadId}`);
     } catch (err) {
         next(err);
+    }
+});
+
+// Маршрут для загрузки тредов с пагинацией
+app.get('/api/threads', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 3; // Количество тредов на страницу
+        const offset = (page - 1) * limit;
+
+        const [boardResults] = await db.promise().query(
+            'SELECT id FROM boards WHERE short_name = "b" LIMIT 1'
+        );
+        
+        if (!boardResults.length) {
+            return res.status(404).json({ error: 'Доска не найдена' });
+        }
+
+        const boardId = boardResults[0].id;
+        
+        // Получаем треды для текущей страницы
+        const [threads] = await db.promise().query(`
+            SELECT t.*, p.message, p.created_at as post_created_at
+            FROM threads t
+            JOIN posts p ON t.id = p.thread_id AND p.is_op = TRUE
+            WHERE t.board_id = ?
+            ORDER BY t.is_pinned DESC, t.updated_at DESC
+            LIMIT ? OFFSET ?
+        `, [boardId, limit, offset]);
+
+        // Получаем комментарии для каждого треда
+        const threadsWithComments = await Promise.all(
+            threads.map(async thread => {
+                const [comments] = await db.promise().query(`
+                    SELECT p.id, p.message, p.created_at, p.name
+                    FROM posts p
+                    WHERE p.thread_id = ? AND p.is_op = FALSE
+                    ORDER BY p.created_at DESC
+                    LIMIT 3
+                `, [thread.id]);
+
+                const [countResult] = await db.promise().query(`
+                    SELECT COUNT(*) as count
+                    FROM posts
+                    WHERE thread_id = ? AND is_op = FALSE
+                `, [thread.id]);
+
+                return {
+                    ...thread,
+                    comments: comments.reverse(),
+                    replyCount: countResult[0].count
+                };
+            })
+        );
+
+        res.json(threadsWithComments);
+    } catch (err) {
+        console.error('Ошибка при загрузке тредов:', err);
+        res.status(500).json({ error: 'Ошибка сервера' });
     }
 });
 

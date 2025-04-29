@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Страница не найдена</title>
+    <title>Ошибка 400</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
     <header>
-        <div class="logo">VReale</div>
+        <div class="logo"><a href="/">VReale</a></div>
     </header>
 
     <div class="container">
         <main class="content">
-            <h1>404 - Страница не найдена</h1>
-            <p>Запрошенная страница не существует.</p>
+            <h1>400 - Неверный запрос</h1>
+            <p><%= error || 'Проверьте правильность отправленных данных' %></p>
             <a href="/">Вернуться на главную</a>
         </main>
     </div>

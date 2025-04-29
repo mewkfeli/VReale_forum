@@ -16,7 +16,9 @@
                 <li><a href="#">Доски</a></li>
                 <li><a href="#">Поиск</a></li>
                 <li><a href="#">FAQ</a></li>
-                <img class="page-mode" src="/resources/icon-dark-mode.png" alt="Тёмная тема">
+                <a href="#" class="page-mode">
+                    <img src="/resources/icon-dark-mode.png" alt="Переключить тему">
+                </a>
             </ul>
         </nav>
     </header>
@@ -48,9 +50,8 @@
                 <% threads.forEach(thread=> { %>
                     <div class="thread">
                         <div class="thread-header">
-                            <span class="thread-id">#<%= thread.id %></span>
                             <span class="thread-date">
-                                <%= new Date(thread.post_created_at).toLocaleString('ru-RU') %>
+                                <%= new Date(thread.post_created_at).toLocaleDateString('ru-RU') %>
                             </span>
                         </div>
                         <div class="thread-content">
@@ -72,7 +73,7 @@
                                         <div class="comment-header">
                                             <span class="comment-id">>>#<%= comment.id %></span>
                                             <span class="comment-date">
-                                                <%= new Date(comment.created_at).toLocaleString('ru-RU') %>
+                                                <%= new Date(comment.created_at).toLocaleDateString('ru-RU') %>
                                             </span>
                                         </div>
                                         <div class="comment-content">
@@ -121,6 +122,7 @@
         <p>Командный проект VReale © 2025 | Все права не защищены</p>
     </footer>
     <script src="/js/theme.js"></script>
+    <script src="/js/load_threads.js"></script>
 </body>
 
 </html>

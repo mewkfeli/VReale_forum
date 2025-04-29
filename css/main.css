@@ -329,7 +329,8 @@ nav ul li a:hover {
 }
 
 /* Форма создания треда */
-.thread-form {
+.thread-form
+{
     background-color: var(--form-bg);
     border-radius: 8px;
     padding: 1.5rem;
@@ -344,7 +345,7 @@ nav ul li a:hover {
     color: var(--blue);
 }
 
-.thread-form textarea {
+.thread-form textarea, form textarea {
     width: 100%;
     padding: 0.75rem;
     background-color: var(--form-bg);
@@ -396,6 +397,7 @@ footer {
 }
 
 /* Стили для комментариев */
+
 .thread-comments {
     margin: 1rem 0;
     padding-left: 1rem;

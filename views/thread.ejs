@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тред #<%= thread.id %> - /<%= boardShortName %>/</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
+
 <body>
     <header>
         <div class="logo">VReale</div>
@@ -15,7 +17,9 @@
                 <li><a href="#">Доски</a></li>
                 <li><a href="#">Поиск</a></li>
                 <li><a href="#">FAQ</a></li>
-                <a class="page-mode" href="#"><img src="/resources/icon-dark-mode.png" alt="Тёмная тема"></a>
+                <a href="#" class="page-mode">
+                    <img src="/resources/icon-dark-mode.png" alt="Переключить тему">
+                </a>
             </ul>
         </nav>
     </header>
@@ -39,37 +43,47 @@
 
         <main class="content">
             <div class="section-header">
-                <h2>/<%= boardShortName %>/ - <%= boardName %></h2>
+                <h2>/<%= boardShortName %>/ - <%= boardName %>
+                </h2>
             </div>
 
             <!-- ОП-пост треда -->
             <div class="thread-op">
                 <div class="thread-header">
                     <span class="thread-id">#<%= thread.id %></span>
-                    <span class="thread-date"><%= new Date(thread.op_created_at).toLocaleString('ru-RU') %></span>
+                    <span class="thread-date">
+                        <%= new Date(thread.op_created_at).toLocaleDateString('ru-RU') %>
+                    </span>
                 </div>
                 <% if (thread.op_subject) { %>
-                    <h3><%= thread.op_subject %></h3>
-                <% } %>
-                <div class="thread-content">
-                    <p><%= thread.op_message %></p>
-                </div>
+                    <h3>
+                        <%= thread.op_subject %>
+                    </h3>
+                    <% } %>
+                        <div class="thread-content">
+                            <p>
+                                <%= thread.op_message %>
+                            </p>
+                        </div>
             </div>
 
             <!-- Комментарии -->
             <div class="comments-list">
-                <% comments.forEach(comment => { %>
-                <div class="comment">
-                    <div class="comment-header">
-                        <span class="comment-id">>>#<%= comment.id %></span>
-                        <span class="comment-name"><%= comment.name %></span>
-                        <span class="comment-date"><%= new Date(comment.created_at).toLocaleString('ru-RU') %></span>
+                <% comments.forEach(comment=> { %>
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-id">>>#<%= comment.id %></span>
+                            <span class="comment-date">
+                                <%= new Date(comment.created_at).toLocaleDateString('ru-RU') %>
+                            </span>
+                        </div>
+                        <div class="comment-content">
+                            <p>
+                                <%= comment.message %>
+                            </p>
+                        </div>
                     </div>
-                    <div class="comment-content">
-                        <p><%= comment.message %></p>
-                    </div>
-                </div>
-                <% }); %>
+                    <% }); %>
             </div>
 
             <!-- Форма добавления комментария -->
@@ -89,5 +103,7 @@
     <footer>
         <p>Командный проект VReale © 2025 | Все права не защищены</p>
     </footer>
+    <script src="/js/theme.js"></script>
 </body>
+
 </html>
