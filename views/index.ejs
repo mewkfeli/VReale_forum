@@ -6,6 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная</title>
     <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .thread-content p,
+        .comment-content p {
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin: 0;
+            padding: 0;
+        }
+
+        .thread-content pre,
+        .comment-content pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: inherit;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 
 <body>
     <header>
@@ -58,13 +76,10 @@
                                     <%= thread.subject %>
                                 </h3>
                                 <% } %>
-                                    <p>
-                                        <%= thread.message %>
-                                    </p>
+                                    <p><%- thread.message %></p>
                         </div>
 
                         <% if (thread.comments && thread.comments.length> 0) { %>
-                            <!-- Комментарии к треду -->
                             <div class="thread-comments">
                                 <% thread.comments.forEach(comment=> { %>
                                     <div class="comment">
@@ -75,45 +90,36 @@
                                             </span>
                                         </div>
                                         <div class="comment-content">
-                                            <p>
-                                                <%= comment.message %>
-                                            </p>Я
+                                            <p><%- comment.message %></p>
                                         </div>
                                     </div>
                                     <% }); %>
 
                                         <% if (thread.replyCount> 3) { %>
-                                            <!-- Кнопка перехода если комментариев > 3 -->
                                             <div class="view-thread">
                                                 <a href="/<%= boardShortName %>/<%= thread.id %>"
                                                     class="view-thread-button">
-                                                    (<%= thread.replyCount %> ответов)</a>
+                                                    (<%= thread.replyCount %> ответов)
+                                                </a>
                                             </div>
                                             <% } %>
                             </div>
                             <% } %>
-
-                                <div class="thread-footer">
-                                    <span class="thread-replies">Ответов: <%= thread.replyCount %></span>
-                                    <a href="/b/<%= thread.id %>" class="thread-reply">Ответить</a>
-                                </div>
                     </div>
-                    <% }); %>
-            </div>
-            <div class="load-more">
-                <button class="more-button">Ещё</button>
-            </div>
-
-            <div class="thread-form">
-                <h3>Создать новый тред</h3>
-                <form action="/<%= boardShortName %>/new" method="POST">
-                    <textarea name="message" placeholder="Текст сообщения..." rows="4" required></textarea>
-                    <div class="form-footer">
-                        <input type="text" name="subject" placeholder="Тема (необязательно)">
-                        <button type="submit">Отправить</button>
+                    <div class="load-more">
+                        <button class="more-button">Ещё</button>
                     </div>
-                </form>
-            </div>
+
+                    <div class="thread-form">
+                        <h3>Создать новый тред</h3>
+                        <form action="/<%= boardShortName %>/new" method="POST">
+                            <textarea name="message" placeholder="Текст сообщения..." rows="4" required></textarea>
+                            <div class="form-footer">
+                                <input type="text" name="subject" placeholder="Тема (необязательно)">
+                                <button type="submit">Отправить</button>
+                            </div>
+                        </form>
+                    </div>
         </main>
     </div>
 
@@ -122,6 +128,29 @@
     </footer>
     <script src="/js/theme.js"></script>
     <script src="/js/load_threads.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Обработка переносов строк (если не используется серверная обработка)
+            document.querySelectorAll('.comment-content p').forEach(el => {
+                el.innerHTML = el.textContent.replace(/\n/g, '<br>');
+            });
+
+            // Обработка нажатия Enter в текстовом поле
+            const textarea = document.querySelector('textarea[name="message"]');
+            if (textarea) {
+                textarea.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const start = this.selectionStart;
+                        const end = this.selectionEnd;
+                        this.value = this.value.substring(0, start) + '\n' + this.value.substring(end);
+                        this.selectionStart = this.selectionEnd = start + 1;
+                    }
+                });
+            }
+        });
+    </script>
+
 </body>
 
 </html>

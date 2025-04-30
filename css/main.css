@@ -296,25 +296,17 @@ nav ul li a:hover {
 .thread-footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 0.875rem;
     color: var(--thread-meta);
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 3rem;
 }
 
-.thread-replies, 
-.thread-likes, 
-.thread-dislikes {
+.thread-footer div {
     display: flex;
     align-items: center;
-}
-
-.thread-likes {
-    color: var(--likes-color);
-}
-
-.thread-dislikes {
-    color: var(--dislikes-color);
+    gap: 10px;
 }
 
 .thread-reply {
@@ -328,6 +320,13 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 
+.reply-form {
+    margin-top: 25px;
+}
+
+.reply-form form {
+    margin-top: 20px;
+}
 /* Форма создания треда */
 .thread-form
 {
@@ -434,6 +433,7 @@ footer {
 
 .view-thread-button {
     display: inline-block;
+
     padding: 0.5rem 1rem;
     background-color: var(--outline-button-bg);
     color: var(--outline-button-text);
@@ -476,8 +476,9 @@ footer {
     }
 }
 
-pre {
-    white-space: pre-wrap;       /* Сохраняет пробелы и переносы, но переносит текст */
-    word-wrap: break-word;       /* Переносит длинные слова */
-    font-family: inherit;        /* Наследует шрифт от родителя */
+.comment-content p {
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+    padding: 0;
 }

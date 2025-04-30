@@ -93,9 +93,16 @@ app.get('/', async (req, res, next) => {
                     WHERE thread_id = ? AND is_op = FALSE
                 `, [thread.id]);
 
+                // Обрабатываем сообщения для корректного отображения
+                const processedComments = comments.map(comment => ({
+                    ...comment,
+                    message: comment.message.replace(/\n/g, '<br>')
+                }));
+
                 return {
                     ...thread,
-                    comments: comments.reverse(),
+                    message: thread.message.replace(/\n/g, '<br>'), // Обрабатываем OP-сообщение
+                    comments: processedComments.reverse(),
                     replyCount: countResult[0].count
                 };
             })

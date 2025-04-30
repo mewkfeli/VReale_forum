@@ -76,9 +76,7 @@
                             </span>
                         </div>
                         <div class="comment-content">
-                            <p>
-                                <%= comment.message %>
-                            </p>
+                            <p><%- comment.message %></p>
                         </div>
                     </div>
                     <% }); %>
@@ -102,6 +100,28 @@
     </footer>
     <script src="/js/theme.js"></script>
     <script src="/js/load_threads.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Обработка переносов строк (если не используется серверная обработка)
+            document.querySelectorAll('.comment-content p').forEach(el => {
+                el.innerHTML = el.textContent.replace(/\n/g, '<br>');
+            });
+
+            // Обработка нажатия Enter в текстовом поле
+            const textarea = document.querySelector('textarea[name="message"]');
+            if (textarea) {
+                textarea.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const start = this.selectionStart;
+                        const end = this.selectionEnd;
+                        this.value = this.value.substring(0, start) + '\n' + this.value.substring(end);
+                        this.selectionStart = this.selectionEnd = start + 1;
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 

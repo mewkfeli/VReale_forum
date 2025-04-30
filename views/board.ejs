@@ -53,7 +53,6 @@
                             <span class="thread-date">
                                 <%= new Date(thread.post_created_at).toLocaleString('ru-RU') %>
                             </span>
-                            
                         </div>
                         <div class="thread-content">
                             <% if (thread.subject) { %>
@@ -61,9 +60,7 @@
                                     <%= thread.subject %>
                                 </h3>
                                 <% } %>
-                                    <p>
-                                        <%= thread.message %>
-                                    </p>
+                                    <p><%- thread.message %></p>
                         </div>
 
                         <% if (thread.comments && thread.comments.length> 0) { %>
@@ -77,28 +74,39 @@
                                             </span>
                                         </div>
                                         <div class="comment-content">
-                                            <p>
-                                                <%= comment.message %>
-                                            </p>
+                                            <p><%- comment.message %></p>
                                         </div>
                                     </div>
                                     <% }); %>
+
+                                    
 
                                         <% if (thread.replyCount> 3) { %>
                                             <div class="view-thread">
                                                 <a href="/<%= boardShortName %>/<%= thread.id %>"
                                                     class="view-thread-button">
-                                                    Перейти в тред (<%= thread.replyCount %> ответов)
+                                                    (<%= thread.replyCount %> ответов)
                                                 </a>
                                             </div>
                                             <% } %>
+
+                                    
                             </div>
                             <% } %>
-
-                                <div class="thread-footer">
-                                    <span class="thread-replies">Ответов: <%= thread.replyCount %></span>
-                                    <a href="/<%= boardShortName %>/<%= thread.id %>" class="thread-reply">Ответить</a>
+                            <!-- Восстановленный блок с кнопками -->
+                            <div class="thread-footer">
+                                <span class="thread-replies">Ответов: <%= thread.replyCount %></span>
+                                <div>
+                                    <% if (thread.replyCount> 0) { %>
+                                        <a href="/<%= boardShortName %>/<%= thread.id %>"
+                                            class="view-thread-button">
+                                            Перейти к треду
+                                        </a>
+                                        <% } %>
+                                            <a href="/<%= boardShortName %>/<%= thread.id %>"
+                                                class="thread-reply">Ответить</a>
                                 </div>
+                            </div>
                     </div>
                     <% }); %>
             </div>
@@ -107,11 +115,10 @@
                 <button class="more-button" data-board="<%= boardShortName %>">Ещё</button>
             </div>
 
-
             <div class="thread-form">
                 <h3>Создать новый тред</h3>
-                <form action="/<%= boardShortName %>/new" method="POST"> <textarea name="message"
-                        placeholder="Текст сообщения..." rows="4" required></textarea>
+                <form action="/<%= boardShortName %>/new" method="POST">
+                    <textarea name="message" placeholder="Текст сообщения..." rows="4" required></textarea>
                     <div class="form-footer">
                         <input type="text" name="subject" placeholder="Тема (необязательно)">
                         <button type="submit">Отправить</button>
@@ -127,6 +134,30 @@
 
     <script src="/js/load_threads.js"></script>
     <script src="/js/theme.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Обработка переносов строк в сообщениях
+            document.querySelectorAll('.thread-content p, .comment-content p').forEach(el => {
+                if (el.innerHTML === el.textContent) {
+                    el.innerHTML = el.textContent.replace(/\n/g, '<br>');
+                }
+            });
+
+            // Обработка переносов строк в форме
+            const textarea = document.querySelector('textarea[name="message"]');
+            if (textarea) {
+                textarea.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const start = this.selectionStart;
+                        const end = this.selectionEnd;
+                        this.value = this.value.substring(0, start) + '\n' + this.value.substring(end);
+                        this.selectionStart = this.selectionEnd = start + 1;
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
