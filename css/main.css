@@ -475,3 +475,9 @@ footer {
         margin-left: 0;
     }
 }
+
+pre {
+    white-space: pre-wrap;       /* Сохраняет пробелы и переносы, но переносит текст */
+    word-wrap: break-word;       /* Переносит длинные слова */
+    font-family: inherit;        /* Наследует шрифт от родителя */
+}

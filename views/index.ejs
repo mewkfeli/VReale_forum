@@ -48,7 +48,7 @@
                     <div class="thread">
                         <div class="thread-header">
                             <span class="thread-date">
-                                <%= new Date(thread.post_created_at).toLocaleDateString('ru-RU') %>
+                                <%= new Date(thread.post_created_at).toLocaleString('ru-RU') %>
                             </span>
                         </div>
                         <div class="thread-content">
@@ -70,13 +70,13 @@
                                         <div class="comment-header">
                                             <span class="comment-id">>>#<%= comment.id %></span>
                                             <span class="comment-date">
-                                                <%= new Date(comment.created_at).toLocaleDateString('ru-RU') %>
+                                                <%= new Date(comment.created_at).toLocaleString('ru-RU') %>
                                             </span>
                                         </div>
                                         <div class="comment-content">
                                             <p>
                                                 <%= comment.message %>
-                                            </p>
+                                            </p>Я
                                         </div>
                                     </div>
                                     <% }); %>
@@ -84,7 +84,8 @@
                                         <% if (thread.replyCount> 3) { %>
                                             <!-- Кнопка перехода если комментариев > 3 -->
                                             <div class="view-thread">
-                                                <a href="/b/<%= thread.id %>" class="view-thread-button">Перейти в тред
+                                                <a href="/<%= boardShortName %>/<%= thread.id %>"
+                                                    class="view-thread-button">
                                                     (<%= thread.replyCount %> ответов)</a>
                                             </div>
                                             <% } %>
@@ -104,7 +105,7 @@
 
             <div class="thread-form">
                 <h3>Создать новый тред</h3>
-                <form action="/b/new" method="POST">
+                <form action="/<%= boardShortName %>/new" method="POST">
                     <textarea name="message" placeholder="Текст сообщения..." rows="4" required></textarea>
                     <div class="form-footer">
                         <input type="text" name="subject" placeholder="Тема (необязательно)">

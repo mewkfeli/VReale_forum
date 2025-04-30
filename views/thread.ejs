@@ -49,7 +49,7 @@
                 <div class="thread-header">
                     <span class="thread-id">#<%= thread.id %></span>
                     <span class="thread-date">
-                        <%= new Date(thread.op_created_at).toLocaleDateString('ru-RU') %>
+                        <%= new Date(thread.op_created_at).toLocaleString('ru-RU') %>
                     </span>
                 </div>
                 <% if (thread.op_subject) { %>
@@ -71,7 +71,7 @@
                         <div class="comment-header">
                             <span class="comment-id">>>#<%= comment.id %></span>
                             <span class="comment-date">
-                                <%= new Date(comment.created_at).toLocaleDateString('ru-RU') %>
+                                <%= new Date(comment.created_at).toLocaleString('ru-RU') %>
                             </span>
                         </div>
                         <div class="comment-content">
@@ -85,8 +85,8 @@
 
             <div class="reply-form">
                 <h3>Добавить комментарий</h3>
-                <form action="/<%= boardShortName %>/<%= thread.id %>/reply" method="POST">
-                    <textarea name="message" placeholder="Текст сообщения..." rows="4" required></textarea>
+                <form action="/<%= boardShortName %>/<%= thread.id %>/reply" method="POST"> <textarea name="message"
+                        placeholder="Текст сообщения..." rows="4" required></textarea>
                     <div class="form-footer">
                         <input type="text" name="name" placeholder="Имя (необязательно)" maxlength="50">
                         <button type="submit">Отправить</button>
