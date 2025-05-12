@@ -1,0 +1,66 @@
+﻿<ui:FluentWindow x:Class="AdminPanel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminPanel"
+                 WindowStartupLocation="CenterScreen"
+
+                 
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <ui:TitleBar Title="Авторизация"/>
+        <ui:TextBlock Grid.Row="1"
+                      HorizontalAlignment="Center" 
+                      VerticalAlignment="Center" 
+                      FontSize="24" 
+                      FontFamily="Arial" 
+                      Text="Добро пожаловать, введите ваш ID и пароль!"></ui:TextBlock>
+        <ui:TextBox 
+            x:Name="tboxId"
+            Grid.Row="2"
+                    Margin="0,0,0,70"
+                    PlaceholderText="Ваш логин"
+                    PreviewTextInput="tboxId_PreviewTextInput"
+                    PlaceholderEnabled="True"
+                      MinWidth="330"
+                      Height="50"
+                      HorizontalAlignment="Center" 
+                      VerticalAlignment="Center" 
+                      FontSize="24" 
+                      FontFamily="Arial" 
+                    />
+        <ui:PasswordBox
+            PreviewTextInput="tboxId_PreviewTextInput"
+            x:Name="tboxPassword"
+            Grid.Row="2"
+                    Margin="0,70,0,0"
+                    PlaceholderText="Ваш пароль"
+                    PlaceholderEnabled="True"
+                      MinWidth="330"
+                      Height="50"
+                      HorizontalAlignment="Center" 
+                      VerticalAlignment="Center" 
+                      FontSize="24" 
+                      FontFamily="Arial" 
+                    />
+        <ui:Button Grid.Row="3" 
+                   MinWidth="200"
+                   Content="Войти"
+                    Height="50"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" 
+                    FontSize="24"
+                   FontFamily="Arial" Click="Button_Click"
+                   ></ui:Button>
+        
+    </Grid>
+</ui:FluentWindow>

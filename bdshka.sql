@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
--- Host: localhost    Database: anonymous_forum
+-- Host: localhost    Database: bd
 -- ------------------------------------------------------
--- Server version	8.0.42
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -54,15 +54,12 @@ DROP TABLE IF EXISTS `moderators`;
 CREATE TABLE `moderators` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
   `role` enum('admin','moderator') NOT NULL,
-  `board_id` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `password` varchar(16) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  KEY `board_id` (`board_id`),
-  CONSTRAINT `moderators_ibfk_1` FOREIGN KEY (`board_id`) REFERENCES `boards` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +68,7 @@ CREATE TABLE `moderators` (
 
 LOCK TABLES `moderators` WRITE;
 /*!40000 ALTER TABLE `moderators` DISABLE KEYS */;
-INSERT INTO `moderators` VALUES (1,'admin','$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W','admin',NULL,'2025-04-28 09:40:42'),(2,'mod_b','$2y$10$VjO3rVUyYfT7sH7W8pzZpe3cB5W9X.6Jd0YJk3lN1oJrO5Xr1JKlK','moderator',1,'2025-04-28 09:40:42'),(3,'mod_vg','$2y$10$ZKL7Xk3JlN2oYfT7sH8W9e4C5V6B7N8M9J0K1L2O3P4Q5R6S7T8U','moderator',2,'2025-04-28 09:40:42');
+INSERT INTO `moderators` VALUES (1,'admin','admin','2025-04-28 09:40:42','admin'),(2,'mod_b','moderator','2025-04-28 09:40:42','moder'),(3,'mod_vg','moderator','2025-04-28 09:40:42','moder'),(4,'puq','moderator','2025-04-28 09:40:42','moder'),(5,'eblo','moderator','2025-05-07 19:25:31','eblo');
 /*!40000 ALTER TABLE `moderators` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,6 +88,7 @@ CREATE TABLE `posts` (
   `subject` varchar(200) DEFAULT NULL,
   `message` text NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('accepted','onquerry','declined') NOT NULL DEFAULT 'onquerry',
   PRIMARY KEY (`id`),
   KEY `parent_id` (`parent_id`),
   KEY `idx_posts_thread` (`thread_id`),
@@ -106,7 +104,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (1,1,NULL,1,'Аноним','Почему трава зеленая?','Вот сижу думаю, почему трава зеленая?','2025-04-28 09:40:42'),(2,2,NULL,1,'Философ','Философский тред','Давайте обсудим смысл жизни','2025-04-28 09:40:42'),(3,3,NULL,1,'Геймер','Обсуждение Elden Ring','Кто прошел Elden Ring?','2025-04-28 09:40:42'),(4,4,NULL,1,'Критик','Лучшие игры 2023 года','Какие игры вам понравились?','2025-04-28 09:40:42'),(5,5,NULL,1,'Редактор','Главные новости сегодня','Сегодня произошло важное событие...','2025-04-28 09:40:42'),(6,6,NULL,1,'Отаку','Какое аниме посмотреть?','Посоветуйте хорошее аниме','2025-04-28 09:40:42'),(7,1,NULL,0,'Биолог',NULL,'Трава зеленая из-за хлорофилла','2025-04-28 09:40:42'),(8,1,NULL,0,'Аноним',NULL,'А мне кажется, это заговор','2025-04-28 09:40:42'),(9,2,NULL,0,'Мудрец',NULL,'Смысл жизни в 42','2025-04-28 09:40:42'),(10,2,NULL,0,'Скептик',NULL,'Жизнь не имеет смысла','2025-04-28 09:40:42'),(11,3,NULL,0,'Хардкорщик',NULL,'Elden Ring - шедевр!','2025-04-28 09:40:42'),(12,3,NULL,0,'Новичок',NULL,'Слишком сложно для меня','2025-04-28 09:40:42'),(13,6,NULL,0,'Анимешник',NULL,'Советую Attack on Titan','2025-04-28 09:40:42'),(14,6,NULL,0,'Аноним',NULL,'Demon Slayer тоже хорош','2025-04-28 09:40:42');
+INSERT INTO `posts` VALUES (1,1,NULL,1,'Аноним','Почему трава зеленая?','Вот сижу думаю, почему трава зеленая?','2025-04-28 09:40:42','accepted'),(2,2,NULL,1,'Философ','Философский тред','Давайте обсудим смысл жизни','2025-04-28 09:40:42','declined'),(3,3,NULL,1,'Геймер','Обсуждение Elden Ring','Кто прошел Elden Ring?','2025-04-28 09:40:42','onquerry'),(4,4,NULL,1,'Критик','Лучшие игры 2023 года','Какие игры вам понравились?','2025-04-28 09:40:42','onquerry'),(5,5,NULL,1,'Редактор','Главные новости сегодня','Сегодня произошло важное событие...','2025-04-28 09:40:42','onquerry'),(6,6,NULL,1,'Отаку','Какое аниме посмотреть?','Посоветуйте хорошее аниме','2025-04-28 09:40:42','onquerry'),(7,1,NULL,0,'Биолог',NULL,'Трава зеленая из-за хлорофилла','2025-04-28 09:40:42','onquerry'),(8,1,NULL,0,'Аноним',NULL,'А мне кажется, это заговор','2025-04-28 09:40:42','onquerry'),(9,2,NULL,0,'Мудрец',NULL,'Смысл жизни в 42','2025-04-28 09:40:42','onquerry'),(10,2,NULL,0,'Скептик',NULL,'Жизнь не имеет смысла','2025-04-28 09:40:42','onquerry'),(11,3,NULL,0,'Хардкорщик',NULL,'Elden Ring - шедевр!','2025-04-28 09:40:42','onquerry'),(12,3,NULL,0,'Новичок',NULL,'Слишком сложно для меня','2025-04-28 09:40:42','onquerry'),(13,6,NULL,0,'Анимешник',NULL,'Советую Attack on Titan','2025-04-28 09:40:42','onquerry'),(14,6,NULL,0,'Аноним',NULL,'Demon Slayer тоже хорош','2025-04-28 09:40:42','onquerry');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,4 +149,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-28 14:44:15
+-- Dump completed on 2025-05-08  1:40:19
