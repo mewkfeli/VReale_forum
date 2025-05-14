@@ -11,13 +11,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Страница FAQ
+app.get('/faq', (req, res) => {
+    try {
+        res.render('faq');
+    } catch (err) {
+        console.error('Error rendering FAQ:', err);
+        res.status(500).render('500');
+    }
+});
+
 // Главная страница (перенаправляем на /b)
 app.get('/', (req, res) => {
     res.redirect('/b');
 });
 
 // Проверка шаблонов
-const requiredTemplates = ['404.ejs', '500.ejs', 'thread.ejs', 'index.ejs', 'board.ejs'];
+const requiredTemplates = ['404.ejs', '500.ejs', 'thread.ejs', 'index.ejs', 'board.ejs', 'faq.ejs'];
 requiredTemplates.forEach(template => {
     const templatePath = path.join(__dirname, 'views', template);
     if (!fs.existsSync(templatePath)) {
@@ -73,7 +83,7 @@ app.get('/', async (req, res, next) => {
             FROM threads t
             JOIN posts p ON t.id = p.thread_id AND p.is_op = TRUE
             WHERE t.board_id = ?
-            ORDER BY t.is_pinned DESC, t.updated_at DESC
+            ORDER BY t.is_pinned DESC, t.updated_at DESC 
             LIMIT ?
         `, [boardId, limit]);
 

@@ -15,9 +15,8 @@
             <ul>
                 <li><a href="/">Главная</a></li>
                 <li><a href="#">Доски</a></li>
-                <li><a href="#">Поиск</a></li>
-                <li><a href="#">FAQ</a></li>
-                <a href="#" class="page-mode">
+                <li><a href="/faq">FAQ</a></li>
+                 <a href="#" class="page-mode">
                     <img src="/resources/icon-dark-mode.png" alt="Переключить тему">
                 </a>
             </ul>
@@ -49,6 +48,9 @@
             <div class="thread-op">
                 <div class="thread-header">
                     <span class="thread-id">#<%= thread.id %></span>
+                    <span class="thread-content">
+                        <%= thread.name %>
+                    </span>
                     <span class="thread-date">
                         <%= new Date(thread.op_created_at).toLocaleString('ru-RU') %>
                     </span>
@@ -122,7 +124,6 @@
             }
         });
     </script>
-
 </body>
 
 </html>
